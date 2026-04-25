@@ -38,7 +38,7 @@ public:
   // 启动服务器，开启事件循环
   void start() { server_.start(); }
 
-  ~ChatServer();
+  ~ChatServer() {}
 
 private:
   // 专门处理用户连接的回调函数
@@ -61,7 +61,7 @@ private:
   {
     string msg = buf->retrieveAllAsString();
     cout << "rece data: " << msg << " at " << receiveTime.toString() << endl;
-    conn->send(msg);
+    conn->send("我已收到: " + msg);
   }
 
   TcpServer

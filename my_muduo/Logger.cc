@@ -1,4 +1,6 @@
 #include "Logger.h"
+#include "Timestamp.h"
+
 #include<iostream>
 Logger & Logger::instance() {
     static Logger logger; // 通过用局部静态变量实现单例模式
@@ -32,6 +34,6 @@ void Logger::func_Log(string msg) {
             cout << "[UNKNOWN] " << endl;
     }
     //输出日志信息和时间戳
-    cout << "time :" <<" "<<msg << endl;
+    cout  <<Timestamp::now().toString() <<" : "<<msg << endl;
 }
     
