@@ -12,7 +12,7 @@ InetAddress类本质上就是一个sockaddr*in结构体的封装，它提供了一些方便的成员函数来
 1. 默认构造函数，需要指定IP地址和端口号，默认IP地址为本地回环地址（127.0.0.1）。
 2. 或直接通过一个sockaddr_in结构体拷贝构造。
 
-然后其方法有：
+然后其方法有如下几种（具体的见InetAddress.cc）：
 
 1. toIp()：将addr\_中的IP地址转换为字符串表示，返回字符串表示。
 2. toPort()：将网络字节序的端口号转换为主机字节序的端口号返回。
@@ -37,8 +37,10 @@ private:
 
 ## 此封装与源码辨析
 
-1、此封装逻辑只支持IPv4地址，使用简单的sockaddr*in结构体。而muduo源码中使用union结构体来支持IPv4和IPv6地址，其他方法也更加丰富。
-2、官方是将IP和端口转换都封装在sockets中，并在内部调用inet_pton()等更安全的函数。而本例中直接对addr*进行操作，没有封装在sockets中。
+1、此封装逻辑只支持IPv4地址，使用简单的sockaddr\*in结构体。而muduo源码中使用union结构体来支持IPv4和IPv6地址，其他方法也更加丰富。
+
+2、官方是将IP和端口转换都封装在sockets中，并在内部调用inet_pton()等更安全的函数。而本例中直接对addr\*进行操作，没有封装在sockets中。
+
 3、源码是通过 Endian.h 提供了统一的字节序转换函数，提高了代码的一致性。并且使用 inet_pton 和 inet_ntop 替代较老的 inet_addr 和 inet_ntoa，提供了更好的错误检测能力。
 
-虽然简洁明了，直接高效，但是在安全性（比如inet_addr()函数不如 inet_pton() 安全）和功能上有一定缺陷。
+此写法虽然简洁明了，直接高效，但是在安全性（比如inet_addr()函数不如 inet_pton() 安全）和功能上有一定缺陷。

@@ -30,13 +30,26 @@ public:
     int events() const {return events_;};
     void set_revents(int revt) {revents_=revt;};//Poller返回实际发生的事件，此函数提供给Poller调用
     bool isNoneEvent() const {return events_==kNoneEvent;};
-    
+
 //events_是感兴趣的事件，本来应该通过epoll_ctl来注册，但为了提高效率,
 //muduo采用了“先修改Channel的events_，再统一调用update()来调用epoll_ctl”的方式
     void enableReading() {events_|=kReadEvent; update();};
     void disableReading() {events_&=~kReadEvent; update();};
     void enableWriting() {events_|=kWriteEvent; update();};
     void disableWriting() {events_&=~kWriteEvent; update();};
+    void disableAll() {events_=kNoneEvent; update();};
+
+//bool函数，快捷判断fd是否发生了感兴趣的事件
+    bool isNonEvent() const {return events_==kNoneEvent;};
+    bool isReading() const {return events_&kReadEvent;};
+    bool isWriting() const {return events_&kWriteEvent;};
+
+    int index() {return index_;};
+    void set_index(int idx) {index_=idx;};
+
+//返回Channel所属于哪个EventLoop
+    EventLoop* ownerLoop() {  return loop_;}    
+    void remove(); 
 private:
 //这些常量是为了标识fd上发生的事件类型，方便在handleEvent函数中判断发生了什么事件
   static const int kNoneEvent;

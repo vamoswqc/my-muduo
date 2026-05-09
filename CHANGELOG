@@ -1,0 +1,46 @@
+# my-muduo 手写服务器项目日志
+
+
+=========================================
+2026-04-15  vamoswqc
+	* feat: 实现 EventLoop 核心循环，支持 epoll 水平触发（LT）模式
+	* feat: 完成 Channel 类，封装文件描述符和事件类型（读/写/错误）
+	* fix: 修复 EventLoop::loop() 中未处理 EINTR 信号的 bug
+	* chore: 新增 .gitignore，忽略编译生成的 .o 和 build 文件夹
+
+2026-04-14  vamoswqc
+	* feat: 编写 Timestamp 时间戳类，支持秒/毫秒级时间转换
+	* chore: 初始化项目，创建 src/base/ 目录存放基础工具类
+	* docs: 编写 ChangeLog 日志模板，确定学习进度记录规则
+
+2026-04-23  vamoswqc
+    编写03日志输出.md,阐述其机制与细节
+
+2026-04-22  vamoswqc
+    1、编写了noncopyable类，并写了md文档分析了其原理
+    2、编写了日志输出Logger.h与Logger.cc文件 
+
+2026-04-16  vamoswqc
+    编译运行了muduo_server.cpp文件，
+	并通过telnet连接，实现了一个简单的ech网络服务器 
+
+2026-04-14  vamoswqc
+    1、在readme中编写muduo_server.cpp及讲解文档并
+	        分析其设计精髓 
+    2、阐述了回调函数的工作机制 
+	
+
+2026-04-05  vamoswqc
+    新建自己my-muduo仓库
+    并将原来所写分支所有内容独立出来放入
+    原有克隆下的源码仓库用于参考学习
+
+2026-03-28  vamoswqc
+	配置.vscode相关json文件
+	创建test_muduo目录
+
+2026-03-27  vamoswqc
+	下载陈硕老师源码并创建自己分支mu-muduo
+    删除源码文件保留目录结构用于自己以后编写
+
+=========================================
