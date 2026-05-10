@@ -1,4 +1,3 @@
-#pragma once
 #include <cstring>
 #include<string>
 #include <netinet/in.h> //包含sockaddr_in结构体的定义

@@ -2,6 +2,7 @@
 #include"noncopyable.h"
 #include<functional>
 #include"Timestamp.h"
+#include<memory>
 using namespace std;
 class EventLoop;
 
@@ -25,7 +26,6 @@ public:
 //防止当Channel被手动删除时，EventLoop还在调用Channel的回调函数，
 //导致访问野指针，所以当Channel所属的对象被销毁时，Channel也被销毁    
     void tie(const std::shared_ptr<void>&);
-
     int fd() const {return fd_;};
     int events() const {return events_;};
     void set_revents(int revt) {revents_=revt;};//Poller返回实际发生的事件，此函数提供给Poller调用
@@ -43,7 +43,7 @@ public:
     bool isNonEvent() const {return events_==kNoneEvent;};
     bool isReading() const {return events_&kReadEvent;};
     bool isWriting() const {return events_&kWriteEvent;};
-
+//反映Channel在Poller中的状态
     int index() {return index_;};
     void set_index(int idx) {index_=idx;};
 
@@ -51,6 +51,8 @@ public:
     EventLoop* ownerLoop() {  return loop_;}    
     void remove(); 
 private:
+  void update();
+  void handleEventWithGuard(Timestamp receiveTime);
 //这些常量是为了标识fd上发生的事件类型，方便在handleEvent函数中判断发生了什么事件
   static const int kNoneEvent;
   static const int kReadEvent;  
@@ -62,7 +64,7 @@ private:
   int revents_;    //Poller返回的实际发生的事件
   int index_;//在Poller中的状态
   std::weak_ptr<void> tie_;//当Channel所属的对象被销毁时，Channel也被销毁
-  bool tied_;
+  bool tied_;//当tie_不为空时，说明Channel绑定了一个对象，tied_为true，否则为false
  
   //因为channel里面有fd上发生的具体事件revents，所以它可以负责调用具体事件的回调函数
   ReadCallback readCallback_;//声明读事件回调函数，这个函数对象有一个参数，用于传递读取到的时间戳
@@ -76,4 +78,8 @@ private:
 using EventCallback = std::function<void()>;是一个 “函数对象类型”。能装：任何 无参、无返回值的函数/可调用对象。
 因为 muduo 要实现回调机制：消息来了 → 调用读函数对象、连接来了 → 调用连接函数对象、关闭连接 → 调用关闭函数对象
 这些全是函数对象并且要回调，所以muduo必须要这样先把函数对象声明出来，具体业务逻辑留给用户注册回调函数时实现。
+
+std::weak_ptr<void> tie_;是一个弱指针，指向一个void类型的对象。
+它的作用是为了防止当Channel被手动删除时，EventLoop还在调用Channel的回调函数，导致访问野指针，
+所以当Channel所属的对象被销毁时，Channel也被销毁。
 */

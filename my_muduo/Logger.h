@@ -1,15 +1,15 @@
 #pragma once
 
 #include<string>
-//ÈÕÖ¾µÄ¼¶±ğ
+//æ—¥å¿—çš„çº§åˆ«
 #include "noncopyable.h"
 using namespace std;
 
-//¶¨Òåºêº¯Êı£¬·½±ãÓÃ»§Ê¹ÓÃÈÕÖ¾¹¦ÄÜ¡£Õâ¸öºêº¯Êı½ÓÊÜÒ»¸öÈÕÖ¾ÏûÏ¢
+//å®šä¹‰å®å‡½æ•°ï¼Œæ–¹ä¾¿ç”¨æˆ·ä½¿ç”¨æ—¥å¿—åŠŸèƒ½ã€‚è¿™ä¸ªå®å‡½æ•°æ¥å—ä¸€ä¸ªæ—¥å¿—æ¶ˆæ¯
 #define LOG_INFO(Logmessage,...) \
     do{\
         Logger &logger=Logger::instance();\
-        Logger::instance().setLogLevel(Logger::kInfo);\
+        logger.setLogLevel(kInfo);\
         char buf[1024]={0};\
         snprintf(buf,1024,Logmessage,##__VA_ARGS__);\
         logger.func_Log(buf);  \
@@ -18,7 +18,7 @@ using namespace std;
 #define LOG_WARN(Logmessage,...) \
     do{\
         Logger &logger=Logger::instance();\
-        Logger::instance().setLogLevel(Logger::kWarn);\
+        logger.setLogLevel(kWarn);\
         char buf[1024]={0};\
         snprintf(buf,1024,Logmessage,##__VA_ARGS__);\
         logger.func_Log(buf);  \
@@ -27,7 +27,7 @@ using namespace std;
 #define LOG_ERROR(Logmessage,...) \
     do{\
         Logger &logger=Logger::instance();\
-        Logger::instance().setLogLevel(Logger::kError);\
+        logger.setLogLevel(kError);\
         char buf[1024]={0};\
         snprintf(buf,1024,Logmessage,##__VA_ARGS__);\
         logger.func_Log(buf);  \
@@ -36,19 +36,19 @@ using namespace std;
 #define LOG_FATAL(Logmessage,...) \
     do{\
         Logger &logger=Logger::instance();\
-        Logger::instance().setLogLevel(Logger::kFatal);\
+        logger.setLogLevel(kFatal);\
         char buf[1024]={0};\
         snprintf(buf,1024,Logmessage,##__VA_ARGS__);\
         logger.func_Log(buf);  \
     } while(0)
 
-//ÓÉÓÚµ÷ÊÔÄÚÈİ½Ï¶à£¬ËùÒÔÍ¨¹ıÌõ¼ş±àÒëÀ´¿ØÖÆµ÷ÊÔÈÕÖ¾µÄÊä³ö¡£
-// µ±¶¨ÒåÁËMUDEBUGºêÊ±£¬LOG_DEBUGºê²Å»áÊä³öµ÷ÊÔÈÕÖ¾£»    
+//ç”±äºè°ƒè¯•å†…å®¹è¾ƒå¤šï¼Œæ‰€ä»¥é€šè¿‡æ¡ä»¶ç¼–è¯‘æ¥æ§åˆ¶è°ƒè¯•æ—¥å¿—çš„è¾“å‡ºã€‚
+// å½“å®šä¹‰äº†MUDEBUGå®æ—¶ï¼ŒLOG_DEBUGå®æ‰ä¼šè¾“å‡ºè°ƒè¯•æ—¥å¿—ï¼›    
 #ifdef  MUDEBUG  
 #define LOG_DEBUG(Logmessage,...) \
     do{\
         Logger &logger=Logger::instance();\
-        Logger::instance().setLogLevel(Logger::kDebug);\
+        logger.setLogLevel(kDebug);\
         char buf[1024]={0};\
         snprintf(buf,1024,Logmessage,##__VA_ARGS__);\
         logger.func_Log(buf);  \
@@ -56,24 +56,24 @@ using namespace std;
 #else
 #define LOG_DEBUG(Logmessage,...)
 #endif
-//ÈÕÖ¾µÄºê¶¨Òå½áÊø    
+//æ—¥å¿—çš„å®å®šä¹‰ç»“æŸ    
 
 enum LogLevel {
-    kDebug = 0, // µ÷ÊÔÈÕÖ¾
-    kInfo = 1, // ÆÕÍ¨ĞÅÏ¢ÈÕÖ¾
-    kWarn = 2, // ¾¯¸æÈÕÖ¾
-    kError = 3, // ´íÎóÈÕÖ¾
-    kFatal = 4, // ÖÂÃü´íÎóÈÕÖ¾
+    kDebug , // è°ƒè¯•æ—¥å¿—
+    kInfo , // æ™®é€šä¿¡æ¯æ—¥å¿—
+    kWarn , // è­¦å‘Šæ—¥å¿—
+    kError , // é”™è¯¯æ—¥å¿—
+    kFatal , // è‡´å‘½é”™è¯¯æ—¥å¿—
 };
-//ÈÕÖ¾µÄ¼¶±ğ½áÊø
+//æ—¥å¿—çš„çº§åˆ«ç»“æŸ
 
 class Logger : noncopyable{
 public:
-    static Logger& instance(); // »ñÈ¡ÈÕÖ¾ÊµÀıº¯Êı
-    void setLogLevel(int level); // ÉèÖÃÈÕÖ¾¼¶±ğ
+    static Logger& instance(); // è·å–æ—¥å¿—å®ä¾‹å‡½æ•°
+    void setLogLevel(int level); // è®¾ç½®æ—¥å¿—çº§åˆ«
     void func_Log(string msg);
 private:
-    LogLevel logLevel_; // µ±Ç°ÈÕÖ¾¼¶±ğ
-    Logger(){}; // ¹¹Ôì£¬½ûÖ¹Íâ²¿´´½¨ÊµÀı 
-    ~Logger(){}; // Îö¹¹£¬½ûÖ¹Íâ²¿Ïú»ÙÊµÀı 
+    int logLevel_; // å½“å‰æ—¥å¿—çº§åˆ«
+    Logger(){}; // æ„é€ ï¼Œç¦æ­¢å¤–éƒ¨åˆ›å»ºå®ä¾‹ 
+    ~Logger(){}; // ææ„ï¼Œç¦æ­¢å¤–éƒ¨é”€æ¯å®ä¾‹ 
 };

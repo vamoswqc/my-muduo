@@ -3,17 +3,17 @@
 
 #include<iostream>
 Logger & Logger::instance() {
-    static Logger logger; // ͨ���þֲ���̬����ʵ�ֵ���ģʽ
+    static Logger logger; // 通过用局部静态变量实现单例模式
     return logger;
 }
-//ͨ�����ô˺���������������κεط���ȡ��ͬһ��Logger����ȷ������Ӧ����ֻ��һ����־��¼��ʵ����
+//通过调用此函数，程序可以在任何地方获取到同一个Logger对象，确保整个应用中只有一个日志记录器实例。
 
 void Logger::setLogLevel(int level) {
-    logLevel_ = (LogLevel)level; // ������ת��ΪLogLevelö������
+    logLevel_ = (LogLevel)level; // 将整数转换为LogLevel枚举类型
 }
 
 void Logger::func_Log(string msg) {
-    // ���ݵ�ǰ��־���������־��Ϣ
+    // 根据当前日志级别输出日志信息
    switch (logLevel_) {
         case kDebug:
             cout << "[DEBUG] " << endl;
@@ -33,7 +33,7 @@ void Logger::func_Log(string msg) {
         default:
             cout << "[UNKNOWN] " << endl;
     }
-    //�����־��Ϣ��ʱ���
+    //输出日志信息和时间戳
     cout  <<Timestamp::now().toString() <<" : "<<msg << endl;
 }
     
