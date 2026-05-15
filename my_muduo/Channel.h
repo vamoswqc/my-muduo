@@ -44,8 +44,8 @@ public:
     bool isReading() const {return events_&kReadEvent;};
     bool isWriting() const {return events_&kWriteEvent;};
 //反映Channel在Poller中的状态
-    int index() {return index_;};
-    void set_index(int idx) {index_=idx;};
+    int getIndex() {return index_;};
+    void setIndex(int idx) {index_=idx;};
 
 //返回Channel所属于哪个EventLoop
     EventLoop* ownerLoop() {  return loop_;}    
