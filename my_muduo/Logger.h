@@ -40,6 +40,7 @@ using namespace std;
         char buf[1024]={0};\
         snprintf(buf,1024,Logmessage,##__VA_ARGS__);\
         logger.func_Log(buf);  \
+        exit(-1);\
     } while(0)
 
 //由于调试内容较多，所以通过条件编译来控制调试日志的输出。

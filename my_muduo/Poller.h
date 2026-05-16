@@ -1,8 +1,6 @@
 #pragma once
-#include "Eventloop.h"
-#include"event.h"
+#include"Eventloop.h"
 #include"Channel.h"
-#include"Logger.h"
 #include "noncopyable.h"
 #include<vector>
 #include<unordered_map>
@@ -30,3 +28,10 @@ class Poller:noncopyable{
     private:
         EventLoop* ownerLoop_;
 };
+/*
+channels_ map 的职责：1、记录所有曾注册过的 channel
+2、快速查找：通过 fd 快速定位 channel（用于 fillActiveChannels）
+3、生命周期管理：由上层（EventLoop）负责 channel 的创建和销毁
+
+
+*/

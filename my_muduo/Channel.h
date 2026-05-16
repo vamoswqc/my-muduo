@@ -9,6 +9,7 @@ class EventLoop;
 /*Channel类，理解为一个通道，封装了socketfd和它感兴趣的事件，以及发生事件后的回调函数。
 每个Channel都属于一个EventLoop，EventLoop负责监听Channel上fd发生的事件，并调用相应的回调函数进行处理。
 */
+
 class Channel: public noncopyable
 {
 public:
@@ -29,7 +30,6 @@ public:
     int fd() const {return fd_;};
     int events() const {return events_;};
     void set_revents(int revt) {revents_=revt;};//Poller返回实际发生的事件，此函数提供给Poller调用
-    bool isNoneEvent() const {return events_==kNoneEvent;};
 
 //events_是感兴趣的事件，本来应该通过epoll_ctl来注册，但为了提高效率,
 //muduo采用了“先修改Channel的events_，再统一调用update()来调用epoll_ctl”的方式

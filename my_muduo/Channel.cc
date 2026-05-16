@@ -4,7 +4,6 @@
 #include"Logger.h"
 #include<memory>
 
-//这些是Channel中的静态常量，这里给出定义表示fd上发生的事件类型
 const int Channel::kNoneEvent=0;
 const int Channel::kReadEvent=EPOLLIN|EPOLLPRI;
 const int Channel::kWriteEvent=EPOLLOUT;
