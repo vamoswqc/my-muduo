@@ -5,6 +5,7 @@
 #include <sys/epoll.h>
 #include <unistd.h>
 #include <cerrno>
+#include<Timestamp.h>
 
 const int kNew=-1;//表示channel还未添加到epoll中。只是对epoll，并非对channels_ map
 const int kAdded=1;//表示channel已添加到epoll中
@@ -23,10 +24,37 @@ EpollPoller::EpollPoller(EventLoop* loop):
 EpollPoller::~EpollPoller(){
     ::close(epollFd_);
 }
-
+//轮询epoll中的channel,调用epoll_wait将返回的
 Timestamp EpollPoller::poll(int timeout,ChannelList* activeChannels) {
+   LOG_DEBUG("func=%s =>fd tatal count:%d",__func__,channels_.size());
+   int numEvents=::epoll_wait(epollFd_,&events_[0],static_cast<int>(events_.size()),timeout);
+   int saveError=errno;//poll同时被多次调用，保存当前错误码,error记录的全局的错误
+   Timestamp now(Timestamp::now());
 
-  }
+   if(numEvents<0){
+    if(saveError!=EINTR){
+        errno = saveError;
+        LOG_ERROR("epoll_wait error:%d", saveError);
+    }
+   }else if(numEvents==0){
+    LOG_DEBUG("%s timeout",__func__);
+   }else{
+    LOG_INFO("%d events happened",numEvents);
+    fillActiveChannels(numEvents,activeChannels);
+    if(events_.size() == numEvents){
+        events_.resize(numEvents*2);
+    }
+   }
+   return now;
+}
+//根据返回的events_[]的data的ptr，来获取对应的channel并添加到activeChannels中
+ void EpollPoller::fillActiveChannels(int numEvents,ChannelList* activeChannels)const{
+        for(int i=0;i<numEvents;++i){
+         //将void* 类型的 data.ptr安全转换为 Channel*
+            Channel *channel=static_cast<Channel*>(events_[i].data.ptr);
+            activeChannels->push_back(channel);
+ }
+}
 
 //根据channel的index来判断是添加还是删除在epoll中
 void EpollPoller::updateChannel(Channel* channel){
@@ -78,12 +106,12 @@ void EpollPoller::removeChannel(Channel* channel){
     int fd=channel->fd();
     int index=channel->getIndex();
     channels_.erase(fd);
+
+    LOG_INFO("removeChannel fd=%d",fd);
     if(index == kAdded){
         update(EPOLL_CTL_DEL,channel);
     }
     channel->setIndex(kDeleted);
 }
 
-void EpollPoller::fillActiveChannels(int numEvents,ChannelList* activeChannels)const{
-
-}    
+  

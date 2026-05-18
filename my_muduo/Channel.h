@@ -39,7 +39,7 @@ public:
     void disableWriting() {events_&=~kWriteEvent; update();};
     void disableAll() {events_=kNoneEvent; update();};
 
-//bool函数，快捷判断fd是否发生了感兴趣的事件
+//bool函数，快捷判断fd是否有感兴趣的事件
     bool isNonEvent() const {return events_==kNoneEvent;};
     bool isReading() const {return events_&kReadEvent;};
     bool isWriting() const {return events_&kWriteEvent;};
