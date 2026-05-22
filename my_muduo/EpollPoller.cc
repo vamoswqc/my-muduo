@@ -27,6 +27,7 @@ EpollPoller::~EpollPoller(){
 //轮询epoll中的channel,调用epoll_wait将返回的
 Timestamp EpollPoller::poll(int timeout,ChannelList* activeChannels) {
    LOG_DEBUG("func=%s =>fd tatal count:%d",__func__,channels_.size());
+   
    int numEvents=::epoll_wait(epollFd_,&events_[0],static_cast<int>(events_.size()),timeout);
    int saveError=errno;//poll同时被多次调用，保存当前错误码,error记录的全局的错误
    Timestamp now(Timestamp::now());
