@@ -31,11 +31,11 @@ EventLoopThread::EventLoopThread(const ThreadInitCallback &cb, const std::string
         return loop;
     }
     
-    //下面这个方法是在单独的新线程里面运行的
+    //下面这个方法是在单独的新线程里面运行的，构造函数中和thread_绑定好了的
     void EventLoopThread::threadFunc(){//线程函数，在新线程中运行EventLoop对象
         EventLoop loop;//在新线程中创建一个EventLoop对象
         if(callback_){
-            callback_(&loop);//如果用户传入了回调函数，就调用它来对loop进行一些初始化操作
+            callback_(&loop);//如果用户构造时传入了回调函数，就调用它来对loop进行一些初始化操作
         }
         {
            std::unique_lock<std::mutex> lock(mutex_);
