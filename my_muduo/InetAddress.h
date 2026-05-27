@@ -16,6 +16,7 @@ public:
     string toIpPort() const; //返回IP地址和端口号的字符串表示
 
     const sockaddr_in* getSockAddr() const{return &addr_;}; //返回sockaddr结构体的指针
+    void setSockAddr(const sockaddr_in & addr){addr_=addr;} //设置sockaddr_in结构体的值
 private:
     sockaddr_in addr_;
 };
