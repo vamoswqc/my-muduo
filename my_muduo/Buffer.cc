@@ -1,5 +1,6 @@
 #include"Buffer.h"
 #include<sys/uio.h>
+#include <unistd.h>
 /*从fd上读取数据 Poller工作在LT模式
 tcp数据是流式数据，读的过程中不知道最终数据的大小
 */
@@ -26,4 +27,12 @@ tcp数据是流式数据，读的过程中不知道最终数据的大小
         append(extrabuf,nread-writeable);//将额外写进extrbuf里的数据扩容到buffer_里
     }
     return nread;
+}
+
+ssize_t Buffer::writeFd(int fd,int* saveError){
+    ssize_t n = ::write(fd,peek(),readableBytes());//写到fd里
+    if(n<0){
+        *saveError = errno;
+    }
+    return n;
 }

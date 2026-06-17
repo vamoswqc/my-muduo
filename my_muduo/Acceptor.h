@@ -19,9 +19,9 @@ class Acceptor:noncopyable{
 private:
     void handleRead();
 
-    EventLoop* loop_;//用的就是用户定义的那个baseLoop
+    EventLoop* loop_;//用的就是用户定义的那个baseLoop（mainloop）
     Socket acceptSocket_;
     Channel acceptChannel_;
-    NewConnectionCallback newConnectionCallback_;//用户注册的回调函数，mainloop调用这个函数来处理新连接
+    NewConnectionCallback newConnectionCallback_;//由TcpServer传过来的，Acceptor创建新连接时调用这个函数轮询分发
     bool listening_;
 };

@@ -60,6 +60,7 @@ private:
 
   EventLoop *loop_;//事件循环
   const int fd_;   //fd文件描述符
+  
   int events_;     //感兴趣的事件
   int revents_;    //Poller返回的实际发生的事件
   int index_;//在Poller中的状态

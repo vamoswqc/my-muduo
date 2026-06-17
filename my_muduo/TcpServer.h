@@ -13,20 +13,20 @@
 
 class EventLoopThreadPool;
 /*
- * @brief TcpServerÀà£¬ÓÃÓÚ´´½¨ºÍ¹ÜÀíTCP·þÎñÆ÷
+ * @brief TcpServerï¿½à£¬ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½TCPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
  * 
- * ÕâÊÇÒ»¸ö·Ç¿½±´¿É¸³ÖµµÄÀà£¬ÓÃÓÚ´´½¨ºÍ¹ÜÀíTCP·þÎñÆ÷¡£
- * Ëü°üº¬ÁËÒ»¸öAcceptor¶ÔÏó£¬ÓÃÓÚ¼àÌýÐÂÁ¬½Ó¡£
- * »¹°üº¬ÁËÒ»¸öEventLoop¶ÔÏó£¬ÓÃÓÚ´¦ÀíIOÊÂ¼þºÍµ÷ÓÃ»Øµ÷º¯Êý¡£
- * ×îºó£¬Ëü»¹°üº¬ÁËÒ»¸öEventLoopThreadPool¶ÔÏó£¬ÓÃÓÚ¹ÜÀí¶à¸öÏß³Ì£¬Ã¿¸ö´¦ÀíÒ»¸öÁ¬½Ó¡£
+ * ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½Ç¿ï¿½ï¿½ï¿½ï¿½É¸ï¿½Öµï¿½ï¿½ï¿½à£¬ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Í¹ï¿½ï¿½ï¿½TCPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Acceptorï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½EventLoopï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½IOï¿½Â¼ï¿½ï¿½Íµï¿½ï¿½Ã»Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½EventLoopThreadPoolï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß³Ì£ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ó¡ï¿½
 */
 
 class TcpServer:noncopyable
 {
 public:
-    using ThreadInitCallback = std::function<void(EventLoop*)>;//ÒòÎªÏß³Ì³ØÀï´´½¨EventLoopThread¶ÔÏóÐèÒª»Øµ÷º¯ÊýÀ´³õÊ¼»¯EventLoop¶ÔÏó
+    using ThreadInitCallback = std::function<void(EventLoop*)>;//ï¿½ï¿½Îªï¿½ß³Ì³ï¿½ï¿½ï´´ï¿½ï¿½EventLoopThreadï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½EventLoopï¿½ï¿½ï¿½ï¿½
     enum Option{
-        kNoReusePort,//²»¸´ÓÃ¶Ë¿Ú
+        kNoReusePort,//ï¿½ï¿½ï¿½ï¿½ï¿½Ã¶Ë¿ï¿½
         kReusePort,
     };
 
@@ -42,28 +42,28 @@ public:
     void setWriteCompleteCallback(const WriteCompleteCallback &cb){   writeCompleteCallback_=cb;}
     void setThreadNum(int numThreads);
     
-    //¿ªÆô·þÎñÆ÷¼àÌý
+    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void start();
 private:
     void newConnectionHandle(int sockfd,const InetAddress& peerAddr);
-    void removeConnection(const TcpConnection &conn);
-    void removeConnectionInLoop(const TcpConnection &conn);
+    void removeConnection(const TcpConnectionPtr &conn);
+    void removeConnectionInLoop(const TcpConnectionPtr &conn);
     
-    using ConnectionMap=::unordered_map<std::string,std::shared_ptr<TcpConnection>>;//Á¬½ÓÓ³Éä±í
-    EventLoop* loop_;//Ö÷Ïß³ÌµÄEventLoop¶ÔÏó
+    using ConnectionMap=::unordered_map<std::string,std::shared_ptr<TcpConnection>>;//ï¿½ï¿½ï¿½ï¿½Ó³ï¿½ï¿½ï¿½
+    EventLoop* loop_;//ï¿½ï¿½ï¿½ß³Ìµï¿½EventLoopï¿½ï¿½ï¿½ï¿½
 
-    const std::string name_;
-    const std::string ipPort_;
+    const std::string name_; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    const std::string ipPort_;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IPï¿½ï¿½Ö·ï¿½Í¶Ë¿Úºï¿½
         
-    std::unique_ptr<Acceptor> acceptor_;//mainLoopÖÐ¼àÌýÐÂÁ¬½ÓµÄAcceptor¶ÔÏó
+    std::unique_ptr<Acceptor> acceptor_;//ï¿½ï¿½TcpServerï¿½Ðµï¿½ï¿½ï¿½Òªï¿½ï¿½É«ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
        std::unique_ptr<EventLoopThreadPool> threadPool_;
        
-       ConnectionCallback connectionCallback_;//ÓÐÐÂÁ¬½ÓÊ±µÄ»Øµ÷
-       MessageCallback messageCallback_;//ÓÐ¶ÁÐ´ÏûÏ¢Ê±µÄ»Øµ÷
-       WriteCompleteCallback writeCompleteCallback_;//ÏûÏ¢Ð´Íê³ÉÊ±µÄ»Øµ÷
+       ConnectionCallback connectionCallback_;//ï¿½Ã»ï¿½ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½Ó½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½acceptorï¿½ï¿½tcpconnectionï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+       MessageCallback messageCallback_;//ï¿½Ð¶ï¿½Ð´ï¿½ï¿½Ï¢Ê±ï¿½Ä»Øµï¿½
+       WriteCompleteCallback writeCompleteCallback_;//ï¿½ï¿½Ï¢Ð´ï¿½ï¿½ï¿½Ê±ï¿½Ä»Øµï¿½
        
-       ThreadInitCallback threadInitCallback_;//Ïß³Ì³Ø³õÊ¼»¯Ê±µÄ»Øµ÷
-        std::atomic_int started_;//ÊÇ·ñÆô¶¯ÁË
-        int nextConnectionId_;//ÏÂÒ»¸öÁ¬½ÓµÄid
-        ConnectionMap connections_;//Á¬½ÓÓ³Éä±í
+       ThreadInitCallback threadInitCallback_;//ï¿½ß³Ì³Ø³ï¿½Ê¼ï¿½ï¿½Ê±ï¿½Ä»Øµï¿½
+        std::atomic_int started_;//ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+        int nextConnectionId_;//ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½id
+        ConnectionMap connections_;//ï¿½ï¿½ï¿½ï¿½Ó³ï¿½ï¿½ï¿½
     };

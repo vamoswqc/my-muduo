@@ -7,6 +7,7 @@ using namespace std;
 class InetAddress
 {
 public:
+    InetAddress() = default;
     explicit InetAddress(uint16_t port , std::string ip = "127.0.0.1") ; //构造函数，默认ip为本地回环地址
     explicit InetAddress(const sockaddr_in& addr) : addr_(addr) {} //构造函数，直接通过sockaddr_in结构体初始化
     //uint16_t是一个unsigned short int（16位无符号整数类型）

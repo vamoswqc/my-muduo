@@ -27,12 +27,12 @@ void Channel::tie(const std::shared_ptr<void>& obj)
  void Channel::update()
 {
 //通过Channel所属的EventLoop调用updateChannel函数来更新channel
-    //loop_->updateChannel(this);
+    loop_->updateChannel(this);
 }
 
 void Channel::remove()
 {
-    //loop_->removeChannel(this);
+    loop_->removeChannel(this);
 }
  
 void Channel::handleEvent(Timestamp receiveTime){

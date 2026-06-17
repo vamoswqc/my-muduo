@@ -70,7 +70,9 @@ public:
         return begin()+writeIndex_;   
     }
     
-    ssize_t readFd(int fd,int* saveError);
+    ssize_t readFd(int fd,int* saveError);//从文件描述符fd读取数据到缓冲区中
+
+    ssize_t writeFd(int fd,int* saveError);//将缓冲区中的数据写入文件描述符fd
 private:
     char* begin(){
         return &*buffer_.begin();//

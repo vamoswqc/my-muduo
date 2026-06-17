@@ -120,7 +120,7 @@ connectDestroyed   →  fd 从 epoll 移除，连接彻底结束
         setState(kConnected);
         channel_->tie(shared_from_this());
         channel_->enableReading();
-        //连接建立成功，调用连接回调函数，通知TcpServer有新连接了
+        //连接建立成功，调用连接回调函数
         connectionCallback_(shared_from_this());
     }
 
@@ -128,6 +128,7 @@ connectDestroyed   →  fd 从 epoll 移除，连接彻底结束
         if(state_.load() == kConnected){
             setState(kDisconnected);
             channel_->disableAll();
+            //连接销毁，调用连接回调函数
             connectionCallback_(shared_from_this());
         }
   }
@@ -179,7 +180,7 @@ void TcpConnection::handleWrite(){
                         writeCompleteCallback_(self);  //即使外部释放，对象仍然存活，避免handleWrite()返回，外部又析构释放了对象
                     });
                   }
-                if(state_.load() == kConnecting){//如果正在关闭连接，执行关闭
+                if(state_.load() == kDisconnecting){//如果正在关闭连接，执行关闭
                     shutdownInLoop();
                 }
             }
